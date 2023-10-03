@@ -23,10 +23,7 @@ function App() {
 
   const MyContext = createContext();
 
-  const date = new Date();
-  const showTime = date.getHours()
-    + ':' + date.getMinutes()
-    + ":" + date.getSeconds();
+
   const { token, setToken } = useToken();
   const { removeToken } = useToken();
   // <Login setToken={setToken} />
@@ -36,6 +33,14 @@ function App() {
   //   // return <Login setToken={setToken} />
   //   return <LoginSignUp />
   // }
+  const date = new Date();
+  const refDate = new Date("2020-01-01");
+  const secpassed = Math.floor((date - refDate) / 1000);
+  const showTime=date.getMinutes()*60 + date.getSeconds()+date.getHours()*60*60+secpassed;
+  if(token && showTime-token>2 ){
+    console.log(showTime +" : "+token)
+    localStorage.clear()
+}
 
   return (
       <BrowserRouter>
