@@ -7,7 +7,7 @@ async function loginUser(username, password) {
   const refDate = new Date("2020-01-01");
   const secpassed = Math.floor((date - refDate) / 1000);
   const showTime=date.getMinutes()*60 + date.getSeconds()+date.getHours()*60*60+secpassed;
-  const credentials = { showTime, password };
+  const credentials = { username, password };
   
   const response = await fetch('https://192.168.2.241:8080/login', {
     method: 'POST',
