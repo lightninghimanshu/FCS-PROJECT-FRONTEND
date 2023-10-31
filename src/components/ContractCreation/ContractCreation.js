@@ -38,11 +38,11 @@ function ContractCreation() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { username, password, name, dateOfBirth, btype } = location.state;
+  const { username, password, name, dateOfBirth, btype, email } = location.state;
   const [file, setFile] = useState(null);
 
-  const insertUser = async ({ username, password, name, dateOfBirth, btype }) => {
-    const credentials = { username, password, name, dateOfBirth, btype };
+  const insertUser = async ({ username, password, name, dateOfBirth, btype, email }) => {
+    const credentials = { username, password, name, dateOfBirth, btype, email };
     console.log(credentials);
     const response = await fetch('https://192.168.2.241:8081/insertUser', {
       method: 'POST',
@@ -95,7 +95,7 @@ function ContractCreation() {
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
-          onClick={() => insertUser({ username, password, name, dateOfBirth, btype })}
+          onClick={() => insertUser({ username, password, name, dateOfBirth, btype, email })} 
         >
           Submit
         </button>

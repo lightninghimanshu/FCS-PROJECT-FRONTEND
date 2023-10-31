@@ -14,14 +14,6 @@ export default function Dashboard() {
   const [propId, setPropId] = useState(null);
   const [propAddress, setPropAddress] = useState(null);
 
-  const getSharksData = async () => {
-    console.log('getSharksData');
-    const response = await fetch('https://192.168.2.241:8081/sharks');
-    const data = await response.json();
-    console.log(JSON.stringify(data));
-    setFile(data);
-  }
-
   const getUserProperties = async ({ id }) => {
     const response = await fetch('https://192.168.2.241:8081/getProperties', {
       method: 'POST',
@@ -89,24 +81,46 @@ export default function Dashboard() {
       >
         Get User Properties
       </button>
+      <button
+        className='bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-300'
+        onClick={() => navigate('/d/ap', { state: { id } })}
+      >
+        Add Property
+      </button>
       <div>
         {file && (
           <>
             <div className="mt-4 space-y-2 overflow-y-scroll h-96">
               {file.map((item) => (
                 <div key={item.property_id} className="border p-2 rounded-md">
-                  <p>Property ID: {item.property_id}</p>
-                  <p>User ID: {item.user_id}</p>
-                  <p>Address: {item.address}</p>
-                  <p>Type: {item.type}</p>
-                  <p>Price: {item.price}</p>
-                  <p>Status: {item.status}</p>
+                  {Object.keys(item).map((key) => (
+                    <p key={key}>
+                      {key}: {item[key]}
+                    </p>
+                  ))}
                   <button
                     onClick={() => deleteUserProperties({ property_id: item.property_id })}
                     className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-300"
                   >
                     Delete Property
                   </button>
+                  {
+                    item.status === 'purchased' ? (
+                      <button
+                        onClick={() => navigate('/sellerContract', { state: { item } })}
+                        className="bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600 focus:outline-none focus:ring focus:ring-purple-300"
+                      >
+                        Sign Contract
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => navigate('./update', { state: { property_id: item.property_id, id } })}
+                        className="bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600 focus:outline-none focus:ring focus:ring-purple-300"
+                      >
+                        Update Docs
+                      </button>
+                    )
+                  }
                 </div>
               ))}
             </div>

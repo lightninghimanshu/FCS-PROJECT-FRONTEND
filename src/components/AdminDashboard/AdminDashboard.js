@@ -24,7 +24,7 @@ export default function AdminDashboard() {
   }, [id, navigate]);
 
   const getAllproperties = async () => {
-    const response = await fetch('https://192.168.2.241:8081/getAllProperties', {
+    const response = await fetch('https://192.168.2.241:8081/getAllPropertiesAdmin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -74,7 +74,53 @@ export default function AdminDashboard() {
     alert("Property Deleted");
 
     return data;
+  };
+
+  const approveProperty = async ({ property_id }) => {
+    const response = await fetch('https://192.168.2.241:8081/approveProperty', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ property_id }),
+    });
+
+    if (response.ok) {
+      console.log('Request was made successfully.');
+    }
+    else {
+      console.log('Request was not made successfully.');
+      alert("Some error occured");
+      return;
+
+    }
   }
+
+  const deleteUser = async ({ user_id }) => {
+    const response = await fetch('https://192.168.2.241:8081/deleteUser', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ user_id }),
+    });
+
+    if (response.ok) {
+      console.log('Request was made successfully.');
+      alert("User Deleted");
+    }
+    else {
+      console.log('Request was not made successfully.');
+      alert("Some error occured");
+      return;
+
+    }
+  }
+
+  const handleDownload = ({ fileName }) => {
+    window.open(`https://192.168.2.241:5000/download?name=${fileName}`, '_blank');
+  };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-screen">
@@ -95,6 +141,7 @@ export default function AdminDashboard() {
       >
         Get All Users
       </button>
+
       <div>
         {file && (
           <>
@@ -106,6 +153,46 @@ export default function AdminDashboard() {
                       {key}: {item[key]}
                     </p>
                   ))}
+                  {
+                    item.status === 'pending' &&
+                    (
+                      <div className='flex space-x-2'>
+                        <button
+                          className='bg-blue-500 text-white py-2 px-4 rounded-md'
+                          onClick={() => {
+                            handleDownload({ fileName: item.filename });
+                          }}
+                        >
+                          Download
+                        </button>
+                        <button
+                          className='bg-green-500 text-white py-2 px-4 rounded-md'
+                          onClick={() => {
+                            approveProperty({ property_id: item.property_id });
+                          }}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          className='bg-red-500 text-white py-2 px-4 rounded-md'
+                          onClick={() => {
+                            deleteUserProperties({ property_id: item.property_id });
+                          }}
+                        >
+                          Delete Property
+                        </button>
+                      </div>
+                    )
+
+                  }
+                  <button
+                    className='bg-red-500 text-white py-2 px-4 rounded-md'
+                    onClick={() => {
+                      deleteUser({ user_id: item.user_id });
+                    }}
+                  >
+                    Delete User
+                  </button>
                 </div>
               ))}
             </div>

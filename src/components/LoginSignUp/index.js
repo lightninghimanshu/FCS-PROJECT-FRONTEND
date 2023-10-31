@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function LoginSignUp() {
   const navigate = useNavigate();
-
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-2xl font-bold mb-4">Login or Sign Up</h1>

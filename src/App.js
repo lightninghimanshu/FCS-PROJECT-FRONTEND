@@ -17,8 +17,14 @@ import ContractCreation from './components/ContractCreation/ContractCreation';
 
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import BuyerDashboard from './components/BuyerDashboard/BuyerDashboard';
-import { createContext } from 'react';
 
+import AddProperty from './components/Dashboard/AddProperty/index.js';
+import EKyc from './components/EKyc/EKyc';
+import { createContext } from 'react';
+import BuyProperty from './components/BuyProperty';
+import SellerContract from './components/SellerContract';
+import UpdateDocs from './components/UpdateDocument';
+import Testing from './components/test';
 function App() {
 
   const MyContext = createContext();
@@ -53,21 +59,27 @@ function App() {
               <Route path="*" element={<LoginSignUp />} />
               <Route path="/aadhar" element={<Aadhar />} />
               <Route path="/ContractCreation" element={<ContractCreation />} />
+              <Route path="/Testing" element={<Testing />} />
+              <Route path="/ekyc" element={<EKyc />} />
             </Routes>
           )}
           {token && (
             <>
-              <div className="flex flex-col items-center justify-center h-screen w-screen overflow-hidden">
+              <div className="flex flex-col items-center justify-center h-full w-full">
                 <Routes>
                   <Route path="/d" element={<Dashboard />} />
+                  <Route path="/d/update" element={<UpdateDocs />} />
+                  <Route path="/d/ap" element={<AddProperty />} />
                   <Route path="/p" element={<Preferences />} />
                   <Route path="/v" element={<CertVer />} />
                   <Route path="/g" element={<GenCert />} />
                   <Route path="/a" element={<AdminDashboard />} />
                   <Route path="/b" element={<BuyerDashboard />} />
-
+                  <Route path="/b/buy" element={<BuyProperty />} />
+                  <Route path="/sellerContract" element={<SellerContract />} />
+                  <Route path="/Testing" element={<Testing />} />
                 </Routes>
-                <div>
+                <div className='flex flex-row justify-end w-full p-4'>
                   <button
                     onClick={() => {
                       window.location.reload();
