@@ -13,7 +13,7 @@ function GenCert() {
     try {
       const formData = new FormData();
       formData.append('input_text', inputText);
-      console.log("Going to Flask")
+      // console.log("Going to Flask")
       const response = await axios.post('https://192.168.2.241:5000/g', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',

@@ -1,10 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
+import useToken from '../../useToken';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
-
+  const { token, setToken } = useToken();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -15,38 +16,44 @@ export default function Dashboard() {
   const [propAddress, setPropAddress] = useState(null);
 
   const getUserProperties = async ({ id }) => {
+    const tokenString=JSON.stringify({token});
     const response = await fetch('https://192.168.2.241:8081/getProperties', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token': tokenString,
       },
       body: JSON.stringify({ id }),
     });
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     setFile(data);
   }
 
   const updateUserProperties = async ({ id, name, value }) => {
+    const tokenString=JSON.stringify({token});
     const response = await fetch('https://192.168.2.241:8081/updateProperty', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token': tokenString,
       },
       body: JSON.stringify({ id, name, value }),
     });
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     setFile(data);
   }
 
   const deleteUserProperties = async ({ property_id }) => {
+    const tokenString=JSON.stringify({token});
     const response = await fetch('https://192.168.2.241:8081/deleteProperty', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token': tokenString,
       },
       body: JSON.stringify({ property_id }),
     });
@@ -60,9 +67,9 @@ export default function Dashboard() {
       return;
     }
 
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     alert("Property Deleted");
 
     return data;

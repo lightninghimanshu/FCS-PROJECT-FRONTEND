@@ -14,17 +14,25 @@ function Aadhar() {
   const [errorFlag, setErrorFlag] = useState(false);
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    // setFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size should be less than 5 MB');
+      return;
+    }
+    setFile(file);
   };
 
   const handleSubmit = async (event) => {
-    console.log(username, password, name, dateOfBirth, btype);
+    if (!file) {
+      alert('Please select a file');
+      return;
+    }
+    // console.log(username, password, name, dateOfBirth, btype);
     event.preventDefault();
     const formData = new FormData();
     formData.append('image', file);
-
-    setResult('Valid');
-    return;
+    
 
     try {
       const response = await axios.post('https://192.168.2.241:5000/process_image', formData, {
@@ -33,8 +41,8 @@ function Aadhar() {
 
       const apiName = response.data.name;
       const apiDob = response.data.dob;
-      console.log(apiName, apiDob);
-      console.log(name, dateOfBirth);
+      // console.log(apiName, apiDob);
+      // console.log(name, dateOfBirth);
       if (apiName === name && apiDob === String(dateOfBirth)) {
         setResult('Valid');
       } else {

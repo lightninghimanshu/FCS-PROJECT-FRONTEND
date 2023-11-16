@@ -1,10 +1,13 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import useToken from '../../useToken';
 
 export default function UpdateDocs() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { token, setToken } = useToken();
+
   const { id , property_id} = location.state;
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(null);
@@ -21,7 +24,7 @@ export default function UpdateDocs() {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('name', fileName);
-      console.log(fileName);
+      // console.log(fileName);
       setFile(null);
       try {
         await axios.post('https://192.168.2.241:5000/upload', formData, {
@@ -39,14 +42,16 @@ export default function UpdateDocs() {
     }
   };
   const handleUpdateDocs = async ({ property_id, fileName }) => {
+    const tokenString=JSON.stringify({token});
     const response = await fetch('https://192.168.2.241:8081/updatePropertyFiles', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token':tokenString,
       },
       body: JSON.stringify({ property_id, fileName }),
     });
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
     alert("File Uploaded Successfully");
     navigate(-1);

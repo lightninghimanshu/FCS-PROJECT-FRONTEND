@@ -1,9 +1,10 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-
+import useToken from '../../useToken';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function BuyerDashboard() {
+  const { token, setToken } = useToken();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -22,16 +23,21 @@ export default function BuyerDashboard() {
 
   const getAllproperties = async () => {
     let id = 42;
+    // console.log("Hi")
+    // console.log("howdy");
+    const tokenString=JSON.stringify({token});
+    // console.log("TokenString",tokenString);
     const response = await fetch('https://192.168.2.241:8081/getAllProperties', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json', 
+        'token':tokenString ,
       },
       body: JSON.stringify({ id }),
     });
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     setFile(data);
   }
 
@@ -40,30 +46,35 @@ export default function BuyerDashboard() {
     if (price === '') {
       price = 0;
     }
+    const tokenString=JSON.stringify({token});
+
     const response = await fetch('https://192.168.2.241:8081/filterProperty', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token':tokenString,
       },
       body: JSON.stringify({ type, price }),
     });
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     setFile(data);
   }
 
   const getBoughtProperties = async () => {
+    const tokenString=JSON.stringify({token});
     const response = await fetch('https://192.168.2.241:8081/buyerBoughtProperties', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token':tokenString,
       },
       body: JSON.stringify({ id }),
     });
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     setFile(data);
   };
 

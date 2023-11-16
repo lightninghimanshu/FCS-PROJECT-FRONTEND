@@ -1,10 +1,28 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import useToken from '../../useToken';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
-
-export default function BuyProperty({ setToken }) {
-
+function decrypt(encryptedString) {
+  let trimmedString = encryptedString.substring(4, encryptedString.length - 7);
+  let left = trimmedString.substring(0,trimmedString.length - 3);
+  let right = trimmedString.substring(3);
+  const baseCharCode = 'A'.charCodeAt(0) - 1;
+  let originalNumber = '';
+  for (let i = 0; i < left.length; i++) {
+    const letter = left[i];
+    const letterCode = letter.charCodeAt(0);
+    originalNumber += letterCode - baseCharCode-7;
+  }
+  for (let i = 0; i < right.length; i++) {
+      const letter = right[i];
+      const letterCode = letter.charCodeAt(0);
+      originalNumber += letterCode - baseCharCode-11;
+    }
+  return originalNumber
+}
+export default function BuyProperty() {
+  const { token, setToken } = useToken();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,7 +41,8 @@ export default function BuyProperty({ setToken }) {
       , {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          // 'token': token
         },
         body: JSON.stringify({
           'nameSeller': sellerName,
@@ -35,12 +54,13 @@ export default function BuyProperty({ setToken }) {
         })
       });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     setContract(data.certificateBuyer);
     const response2 = await fetch('https://192.168.2.241:8081/addContract', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        // 'token': token
       },
       body: JSON.stringify({
         buyerId,
@@ -65,18 +85,19 @@ export default function BuyProperty({ setToken }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          // 'token': token
         },
         body: datas
       });
     const data = await response.json();
-    console.log(data);
-    setOtp(data.otp);
+    // console.log(data);
+    setOtp(decrypt(data.otp));
     setBuyerName(data.buyerName);
     setSellerName(data.sellerName);
   }
   const handleSubmitOtp = async e => {
-    console.log(otp);
-    console.log(e.target.elements.otp.value);
+    // console.log(otp);
+    // console.log(e.target.elements.otp.value);
     e.preventDefault();
     if (otp === e.target.elements.otp.value) {
       setOtpValidated(true);
@@ -87,16 +108,18 @@ export default function BuyProperty({ setToken }) {
     }
   }
   const handlePurchase = async ({ property_id }) => {
+    const tokenString=JSON.stringify({token});
     const response = await fetch('https://192.168.2.241:8081/purchaseProperty', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token': tokenString,
       },
       body: JSON.stringify({ property_id, buyerId }),
     });
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     if (data.message === 'error') {
       alert("Error");
     }
@@ -122,7 +145,7 @@ export default function BuyProperty({ setToken }) {
           const paymentId = response.razorpay_payment_id;
           const url = `${API_URL}capture/${paymentId}`;
           const captureResponse = await Axios.post(url, {})
-          console.log(captureResponse.data);
+          // console.log(captureResponse.data);
           setPaymentDetails(captureResponse.data);
         } catch (err) {
           console.log(err);

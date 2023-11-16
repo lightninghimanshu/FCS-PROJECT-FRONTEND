@@ -11,7 +11,7 @@ async function canLogin(eKYCusername, eKYCpassword) {
     },
     body: JSON.stringify(credentials),
   });
-  console.log(response);
+  // console.log(response);
   if (response.ok) {
     console.log('Request was made successfully.');
   } else {
@@ -19,7 +19,7 @@ async function canLogin(eKYCusername, eKYCpassword) {
   }
 
   const res = await response.json();
-  console.log(res);
+  // console.log(res);
   //if res length is 0, then false
   if (res.message === "Login successful") {
     alert("EKYC successful");
@@ -34,7 +34,7 @@ export default function EKyc({ setToken }) {
   const handleSubmit = async e => {
     e.preventDefault();
     const canLoginRes = await canLogin(eKYCusername, eKYCpassword);
-    console.log(canLoginRes);
+    // console.log(canLoginRes);
   }
 
   return (

@@ -2,7 +2,25 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
+function decrypt(encryptedString) {
 
+  let trimmedString = encryptedString.substring(4, encryptedString.length - 7);
+  let left = trimmedString.substring(0,trimmedString.length - 3);
+  let right = trimmedString.substring(3);
+  const baseCharCode = 'A'.charCodeAt(0) - 1;
+  let originalNumber = '';
+  for (let i = 0; i < left.length; i++) {
+    const letter = left[i];
+    const letterCode = letter.charCodeAt(0);
+    originalNumber += letterCode - baseCharCode-7;
+  }
+  for (let i = 0; i < right.length; i++) {
+      const letter = right[i];
+      const letterCode = letter.charCodeAt(0);
+      originalNumber += letterCode - baseCharCode-11;
+    }
+  return originalNumber
+}
 export default function SignUp({ setToken }) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
@@ -24,7 +42,7 @@ export default function SignUp({ setToken }) {
       },
       body: JSON.stringify(credentials),
     });
-    console.log(response);
+    // console.log(response);
     if (response.ok) {
       console.log('Request was made successfully.');
     } else {
@@ -32,7 +50,7 @@ export default function SignUp({ setToken }) {
     }
 
     const res = await response.json();
-    console.log(res);
+    // console.log(res);
     //if res length is 0, then false
     if (res.message === "Login successful") {
       alert("EKYC successful");
@@ -44,7 +62,7 @@ export default function SignUp({ setToken }) {
   const handleSubmitKYC = async e => {
     e.preventDefault();
     const canLoginRes = await canLogin(eKYCusername, eKYCpassword);
-    console.log(canLoginRes);
+    // console.log(canLoginRes);
   }
   
   async function sendOtp() {
@@ -60,16 +78,16 @@ export default function SignUp({ setToken }) {
         },
         body: datas
       });
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
-    setOtp(data.otp);
-    console.log(JSON.stringify(data));
+    setOtp(decrypt(data.otp));
+    // console.log(JSON.stringify(data));
   }
 
   const navigate = useNavigate();
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log(username, password, name, dateOfBirth, btype);
+    // console.log(username, password, name, dateOfBirth, btype);
     sendOtp();
   }
 

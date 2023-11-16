@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation, useNavigate } from 'react-router-dom';
+import useToken from '../../useToken';
 
 
 
+export default function SellerContract() {
 
-export default function SellerContract({ setToken }) {
-
-
+  const { token, setToken } = useToken();
   const location = useLocation();
   const navigate = useNavigate();
   const [contracts, setContracts] = useState(null);
@@ -15,16 +15,18 @@ export default function SellerContract({ setToken }) {
 
   const getContracts = async ({ property_id }) => {
     try {
+      const tokenString=JSON.stringify({token});
       const response = await fetch('https://192.168.2.241:8081/sellProperty', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'token':tokenString,
         },
         body: JSON.stringify({ property_id }),
       });
-      console.log(response);
+      // console.log(response);
       const data = await response.json();
-      console.log(JSON.stringify(data));
+      // console.log(JSON.stringify(data));
       setContracts(data);
     }
     catch (error) {

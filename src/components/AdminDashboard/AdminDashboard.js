@@ -1,10 +1,9 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import useToken from '../../useToken';
 export default function AdminDashboard() {
-
+  const { token, setToken } = useToken();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -24,37 +23,43 @@ export default function AdminDashboard() {
   }, [id, navigate]);
 
   const getAllproperties = async () => {
+    const tokenString=JSON.stringify({token});
     const response = await fetch('https://192.168.2.241:8081/getAllPropertiesAdmin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token': tokenString,
       },
       body: JSON.stringify({ id }),
     });
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     setFile(data);
   }
 
   const getAllusers = async () => {
+    const tokenString=JSON.stringify({token});
     const response = await fetch('https://192.168.2.241:8081/getAllUser', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token': tokenString,
       },
       body: JSON.stringify({ id }),
     });
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     setFile(data);
   }
   const deleteUserProperties = async ({ property_id }) => {
+    const tokenString=JSON.stringify({token});
     const response = await fetch('https://192.168.2.241:8081/deleteProperty', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token': tokenString,
       },
       body: JSON.stringify({ property_id }),
     });
@@ -68,19 +73,21 @@ export default function AdminDashboard() {
       return;
     }
 
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     alert("Property Deleted");
 
     return data;
   };
 
   const approveProperty = async ({ property_id }) => {
+    const tokenString=JSON.stringify({token});
     const response = await fetch('https://192.168.2.241:8081/approveProperty', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token': tokenString,
       },
       body: JSON.stringify({ property_id }),
     });
@@ -97,10 +104,12 @@ export default function AdminDashboard() {
   }
 
   const deleteUser = async ({ user_id }) => {
+    const tokenString=JSON.stringify({token});
     const response = await fetch('https://192.168.2.241:8081/deleteUser', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token': tokenString,
       },
       body: JSON.stringify({ user_id }),
     });

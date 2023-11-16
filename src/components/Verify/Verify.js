@@ -6,10 +6,14 @@ function CertVer() {
   const [validationResult, setValidationResult] = useState('');
 
   const handleVerifyCertificate = async () => {
+    if (!certificateData) {
+      alert('Please select a file');
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append('certificate_data', certificateData);
-      console.log("Going to Flask")
+      // console.log("Going to Flask")
       const response = await axios.post('https://192.168.2.241:5000/v', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -22,7 +26,14 @@ function CertVer() {
     }
   };
   const handleInputChange = (e) => {
-    setCertificateData(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size should be less than 5 MB');
+      return;
+    }
+    else {
+      setCertificateData(file);
+    }
   };
   return (
     <div>

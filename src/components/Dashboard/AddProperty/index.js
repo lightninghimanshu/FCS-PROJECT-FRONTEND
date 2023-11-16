@@ -1,10 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
+import useToken from '../../../useToken';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 export default function AddProperty() {
-
+  const { token, setToken } = useToken();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -19,16 +20,25 @@ export default function AddProperty() {
   }
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size should be less than 5 MB');
+      return;
+    }
+    setFile(file);
     setFileName(id+"_"+genRan()+"_"+e.target.files[0].name);
   };
 
   const handleUpload = async () => {
+    if (!file) {
+      alert('Please select a file');
+      return;
+    }
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('name', fileName);
-      console.log(fileName);
+      // console.log(fileName);
       setFile(null);
       try {
         await axios.post('https://192.168.2.241:5000/upload', formData, {
@@ -47,17 +57,19 @@ export default function AddProperty() {
   };
 
   const handleAddProperty = async ({ address, type, price }) => {
+    const tokenString=JSON.stringify({token});
 
     const response = await fetch('https://192.168.2.241:8081/addProperty', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'token': tokenString,
       },
       body: JSON.stringify({ user_id: id, address, type, price, fileName }),
     });
-    console.log(response);
+    // console.log(response);
     const data = await response.json();
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     if (data.message === "success") {
       alert("Property added successfully");
       navigate('/d', { state: { id, btype } });

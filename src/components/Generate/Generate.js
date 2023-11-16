@@ -18,8 +18,8 @@ function GenCert() {
         type: "Buyer",
       };
 
-      console.log("Going to Flask");
-      console.log(data);
+      // console.log("Going to Flask");
+      // console.log(data);
 
       const response = await axios.post('https://192.168.2.241:5000/g', data, {
         headers: {
